@@ -1,0 +1,64 @@
+# Craft Querystring Filter
+
+Provides a twig filter for modifying query strings from within twig templates.
+
+## Installation
+1. Move the `querystring` folder into your `craft/plugins` directory
+2. Install the plugin in the Craft Control Panel
+
+### Use
+
+A common problem I run into with Craft is the desire to do two-dimensional filtering via query string parameters, but trying to update or modify them in pure twig templating code is a pain.
+
+This plugin, with use of the craft `url` tag, makes this much easier.
+
+First, get the Query object from Craft. Then invoke the `querystring` filter, which accepts and array of key value pairs to add/update the query string.
+
+```
+{% set query_string = craft.request.getQuery() %}
+
+{{ url(craft.request.url, query_string|querystring({'event_type': 'party', 'event_start_date': '2016-12-30'})) }}
+```
+
+will generate a URL like: `http://example.com/path/to/page?event_type=party&event_start_date=2016-12-30`
+
+If a parameter key already exists, it will *replace* the value with the new value.
+
+```
+{{ url(craft.request.url, query_string|querystring({'event_type': 'quinceanera'})) }}
+```
+
+yields: `http://example.com/path/to/page?event_type=quinceanera&event_start_date=2016-12-30`
+
+To remove a parameter, pass in an empty value:
+
+```
+{{ url(craft.request.url, query_string|querystring({'event_start_date': ''})) }}
+```
+
+yields: `http://example.com/path/to/page?event_type=quinceanera`
+
+
+## License
+
+The MIT License (MIT)
+
+Copyright (c) 2016 STAPLEGUN
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
